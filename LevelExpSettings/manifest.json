@@ -1,0 +1,17 @@
+{
+  "Name": "Level Experience Settings",
+  "Author": "AlanBF",
+  "Version": "1.0.0",
+  "Description": "Add settings to control the experience required to Level Up",
+  "UniqueID": "AlanBF.LevelExpSettings",
+  "EntryDll": "LevelExpSettings.dll",
+  "MinimumApiVersion": "4.1.10",
+  "UpdateKeys": [ "Nexus:36914" ],
+  "Dependencies": [
+    {
+      "UniqueID": "DaLion.Professions",
+      "MinimumVersion": "1.3.4",
+      "IsRequired": false
+    }
+  ]
+}

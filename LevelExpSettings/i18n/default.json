@@ -1,0 +1,5 @@
+{
+  "experience-config-title": "Level Up Exp Config",
+  "experience-for-level": "Exp for level {{lvl}}",
+  "experience-warning": "Changing the experience curve mid game might create problems. Start a new game, reset the skill levels or risk it."
+}
