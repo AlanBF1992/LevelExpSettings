@@ -4,7 +4,6 @@ using LevelExpSettings.Compatibility.SpaceCore;
 using LevelExpSettings.Compatibility.WoL;
 using LevelExpSettings.Patches;
 using StardewModdingAPI;
-using StardewModdingAPI.Events;
 using StardewValley;
 
 namespace LevelExpSettings

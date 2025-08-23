@@ -2,7 +2,6 @@
 using LevelExpSettings.Compatibility.GMCM;
 using LevelExpSettings.Compatibility.WoL.Patches;
 using StardewModdingAPI;
-using StardewModdingAPI.Events;
 
 namespace LevelExpSettings.Compatibility.WoL
 {
@@ -26,6 +25,12 @@ namespace LevelExpSettings.Compatibility.WoL
             harmony.Patch(
                 original: AccessTools.Method("DaLion.Professions.Framework.Patchers.Prestige.FarmerCheckForLevelGainPatcher:FarmerCheckForLevelGainPostfix"),
                 transpiler: new HarmonyMethod(typeof(FarmerCheckForLevelGainPatcherPatch), nameof(FarmerCheckForLevelGainPatcherPatch.FarmerCheckForLevelGainPostfixTranspiler))
+            );
+
+            // Change UIInfoSuite2 WoL Integration
+            harmony.Patch(
+                original: AccessTools.Method("DaLion.Professions.Framework.Patchers.Integration.UiInfoSuite.ExperienceBarGetExperienceRequiredToLevelPatcher:ExperienceBarGetExperienceRequiredToLevelPrefix"),
+                transpiler: new HarmonyMethod(typeof(ExperienceBarGetExperienceRequiredToLevelPatcher), nameof(ExperienceBarGetExperienceRequiredToLevelPatcher.ExperienceBarGetExperienceRequiredToLevelPrefixTranspiler))
             );
         }
         private static void GMCMConfigWoL()

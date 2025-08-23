@@ -1,5 +1,7 @@
 ﻿using HarmonyLib;
+using LevelExpSettings.Compatibility.LookupAnything;
 using LevelExpSettings.Compatibility.SpaceCore;
+using LevelExpSettings.Compatibility.UIInfoSuite2;
 using LevelExpSettings.Compatibility.WoL;
 using StardewModdingAPI;
 
@@ -48,6 +50,20 @@ namespace LevelExpSettings
             {
                 WoLLoader.Loader(helper, harmony);
                 LogMonitor.Log("Walk of Life Compat Patches Loaded", LogLevel.Info);
+            }
+
+            // Lookup Anything Compat
+            if (helper.ModRegistry.IsLoaded("Pathoschild.LookupAnything"))
+            {
+                LALoader.Loader(helper, harmony);
+                LogMonitor.Log("Lookup Anything Patches Loaded", LogLevel.Info);
+            }
+
+            // UI Info Suite 2 Compat
+            if (helper.ModRegistry.IsLoaded("Annosz.UiInfoSuite2"))
+            {
+                UIS2Loader.Loader(helper, harmony);
+                LogMonitor.Log("UI Info Suite 2 Patches Loaded", LogLevel.Info);
             }
         }
 
