@@ -1,7 +1,7 @@
 {
   "Name": "Level Experience Settings",
   "Author": "AlanBF",
-  "Version": "1.0.1",
+  "Version": "1.0.2",
   "Description": "Add settings to control the experience required to Level Up",
   "UniqueID": "AlanBF.LevelExpSettings",
   "EntryDll": "LevelExpSettings.dll",
@@ -23,6 +23,10 @@
     },
     {
       "UniqueID": "Annosz.UiInfoSuite2",
+      "IsRequired": false
+    },
+    {
+      "UniqueID": "Darkmushu.UnifiedExperienceSystem",
       "IsRequired": false
     }
   ]
