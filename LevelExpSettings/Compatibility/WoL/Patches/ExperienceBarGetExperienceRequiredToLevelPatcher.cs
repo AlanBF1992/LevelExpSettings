@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using LevelExpSettings.Patches;
 using StardewModdingAPI;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -15,20 +16,19 @@ namespace LevelExpSettings.Compatibility.WoL.Patches
             {
                 CodeMatcher matcher = new(instructions, generator);
 
-                MethodInfo newExperienceLevelsInfo = AccessTools.Method(typeof(FarmerCheckForLevelGainPatcherPatch), nameof(FarmerCheckForLevelGainPatcherPatch.newExperienceLevels));
+                MethodInfo newExperienceLevelsInfo = AccessTools.Method(typeof(FarmerPatch), nameof(FarmerPatch.newExperienceLevels));
 
                 //from: __result = ISkill.LEVEL_10_EXP + Config.Masteries.ExpPerPrestigeLevel * (currentLevel - 10 + 1)
-                //to:   __result = newExperienceLevels(ISkill.LEVEL_10_EXP, currentLevel - 9)
+                //to:   __result = newExperienceLevels(currentLevel)
                 matcher
                     .MatchStartForward(
                         new CodeMatch(OpCodes.Ldc_I4)
                     )
                     .ThrowIfNotMatch("FarmerCheckForLevelGainPatcherPatch.FarmerCheckForLevelGainPostfixTranspiler: IL code 1 not found")
-                    .Advance(2)
+                    .RemoveInstruction()
+                    .Advance(1)
                     .RemoveInstructions(9)
                     .Insert(
-                        new CodeInstruction(OpCodes.Ldc_I4_S, 9),
-                        new CodeInstruction(OpCodes.Sub),
                         new CodeInstruction(OpCodes.Call, newExperienceLevelsInfo)
                     )
                 ;

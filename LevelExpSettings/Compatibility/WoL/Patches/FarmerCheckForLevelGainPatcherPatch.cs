@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using LevelExpSettings.Patches;
 using StardewModdingAPI;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -15,21 +16,23 @@ namespace LevelExpSettings.Compatibility.WoL.Patches
             {
                 CodeMatcher matcher = new(instructions, generator);
 
-                MethodInfo newExperienceLevelsInfo = AccessTools.Method(typeof(FarmerCheckForLevelGainPatcherPatch), nameof(newExperienceLevels));
+                MethodInfo newExperienceLevelsInfo = AccessTools.Method(typeof(FarmerPatch), nameof(FarmerPatch.newExperienceLevels));
 
                 //from: requiredExpForThisLevel = ISkill.LEVEL_10_EXP + ProfessionsMod.Config.Masteries.ExpPerPrestigeLevel * i
-                //to:   requiredExpForThisLevel = newExperienceLevels(ISkill.LEVEL_10_EXP, i)
+                //to:   requiredExpForThisLevel = newExperienceLevels(i)
                 matcher
                     .MatchStartForward(
-                        new CodeMatch(OpCodes.Conv_I8)
+                        new CodeMatch(OpCodes.Ldc_I4)
                     )
                     .ThrowIfNotMatch("FarmerCheckForLevelGainPatcherPatch.FarmerCheckForLevelGainPostfixTranspiler: IL code 1 not found")
-                    .RemoveInstructions(5)
-                    .Advance(1)
-                    .Insert(
+                    .SetAndAdvance(OpCodes.Ldloc_0, null)
+                    .RemoveInstructions(6)
+                    .InsertAndAdvance(
+                        new CodeInstruction(OpCodes.Ldc_I4_S, 9),
+                        new CodeInstruction(OpCodes.Add),
                         new CodeInstruction(OpCodes.Call, newExperienceLevelsInfo)
                     )
-                    .Advance(2)
+                    .Advance(1)
                     .RemoveInstructions(2)
                 ;
 
@@ -40,11 +43,6 @@ namespace LevelExpSettings.Compatibility.WoL.Patches
                 LogMonitor.Log($"Failed in {nameof(FarmerCheckForLevelGainPostfixTranspiler)}:\n{ex}", LogLevel.Error);
                 return instructions;
             }
-        }
-
-        internal static int newExperienceLevels(int _, int i)
-        {
-            return ModEntry.LevelsCalculated[9 + i];
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using LevelExpSettings.Compatibility.LookupAnything;
 using LevelExpSettings.Compatibility.SpaceCore;
+using LevelExpSettings.Compatibility.UES;
 using LevelExpSettings.Compatibility.UIInfoSuite2;
 using LevelExpSettings.Compatibility.WoL;
 using StardewModdingAPI;
@@ -23,6 +24,8 @@ namespace LevelExpSettings
 
         public static int[] LevelsCalculated { get; internal set; } = new int[20];
 
+        public static bool EnableLevel11To20 { get; internal set; }
+
         public override void Entry(IModHelper helper)
         {
             LogMonitor = Monitor;
@@ -31,6 +34,7 @@ namespace LevelExpSettings
             Config = helper.ReadConfig<ModConfig>();
 
             CalculateLevels();
+            EnableLevel11To20 = helper.ModRegistry.IsLoaded("DaLion.Professions") || helper.ModRegistry.IsLoaded("Darkmushu.UnifiedExperienceSystem");
 
             Harmony harmony = new(ModManifest.UniqueID);
 
@@ -50,6 +54,13 @@ namespace LevelExpSettings
             {
                 WoLLoader.Loader(helper, harmony);
                 LogMonitor.Log("Walk of Life Compat Patches Loaded", LogLevel.Info);
+            }
+
+            // UES Compat
+            if (helper.ModRegistry.IsLoaded("Darkmushu.UnifiedExperienceSystem"))
+            {
+                UESLoader.Loader(helper, harmony);
+                LogMonitor.Log("Unified Experience System Compat Patches Loaded", LogLevel.Info);
             }
 
             // Lookup Anything Compat
