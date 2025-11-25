@@ -22,6 +22,7 @@ namespace LevelExpSettings
         /// <summary>The mod configuration from the player.</summary>
         public static ModConfig Config { get; internal set; } = null!;
 
+        public static int[] Levels { get; internal set; } = new int[20];
         public static int[] LevelsCalculated { get; internal set; } = new int[20];
 
         public static bool EnableLevel11To20 { get; internal set; }
@@ -82,6 +83,7 @@ namespace LevelExpSettings
         {
             for (int i = 0; i < 20; i++)
             {
+                Levels[i] = Config.Levels[i + 1];
                 if (i > 0)
                 {
                     LevelsCalculated[i] = LevelsCalculated[i - 1] + Config.Levels[i + 1];
@@ -90,7 +92,6 @@ namespace LevelExpSettings
                 {
                     LevelsCalculated[i] = Config.Levels[1];
                 }
-
             }
         }
     }

@@ -18,26 +18,19 @@ namespace LevelExpSettings.Compatibility.UES.Patches
                 MethodInfo checkExpInfo = AccessTools.Method(typeof(ModEntryEXPTrackingPatch), nameof(checkExp));
                 MethodInfo resetExpInfo = AccessTools.Method(typeof(ModEntryEXPTrackingPatch), nameof(resetStep));
 
+                //from: int add = Math.Max(1, (int)Math.Round(step));
+                //to:   int add = checkExp(L, Math.Max(1, (int)Math.Round(step)));
                 matcher
                     .MatchStartForward(
                         new CodeMatch(OpCodes.Ldc_R8)
                     )
                     .ThrowIfNotMatch("ModEntryEXPTrackingPatch.RebuildUesXpCurveTranspiler: IL code 1 not found")
-                ;
-
-                //var resetStep = matcher.InstructionsWithOffsets(1, 6);
-                //resetStep.Insert(0, new CodeInstruction(OpCodes.Ldc_R8, 1));
-
-
-                //from: int add = Math.Max(1, (int)Math.Round(step));
-                //to:   int add = checkExp(L, Math.Max(1, (int)Math.Round(step)));
-                matcher
                     .MatchStartForward(
                         new CodeMatch(OpCodes.Ldc_I4_1),
                         new CodeMatch(OpCodes.Ldloc_1),
                         new CodeMatch(OpCodes.Call)
                     )
-                    .ThrowIfNotMatch("ModEntryEXPTrackingPatch.RebuildUesXpCurveTranspiler: IL code 1 not found")
+                    .ThrowIfNotMatch("ModEntryEXPTrackingPatch.RebuildUesXpCurveTranspiler: IL code 2 not found")
                     .Insert(
                         new CodeInstruction(OpCodes.Ldloc_S, 7)
                     )
@@ -53,7 +46,7 @@ namespace LevelExpSettings.Compatibility.UES.Patches
                         new CodeMatch(OpCodes.Ldloc_1),
                         new CodeMatch(OpCodes.Ldc_R8)
                     )
-                    .ThrowIfNotMatch("ModEntryEXPTrackingPatch.RebuildUesXpCurveTranspiler: IL code 2 not found")
+                    .ThrowIfNotMatch("ModEntryEXPTrackingPatch.RebuildUesXpCurveTranspiler: IL code 3 not found")
                     .Insert(
                         new CodeInstruction(OpCodes.Ldloc_S, 7)
                     )
@@ -80,7 +73,7 @@ namespace LevelExpSettings.Compatibility.UES.Patches
             {
                 return exp;
             }
-            return ModEntry.Config.Levels[L];
+            return ModEntry.Levels[L - 1];
         }
 
         internal static double resetStep(int L, double step, double G)

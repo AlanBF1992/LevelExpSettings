@@ -23,8 +23,7 @@ namespace LevelExpSettings
             // Base
             harmony.Patch(
                 original: AccessTools.Method(typeof(Farmer), nameof(Farmer.getBaseExperienceForLevel)),
-                prefix: new HarmonyMethod(typeof(FarmerPatch), nameof(FarmerPatch.getBaseExperienceForLevelPrefix))
-                //transpiler: new HarmonyMethod(typeof(FarmerPatch), nameof(FarmerPatch.getBaseExperienceForLevelTranspiler))
+                transpiler: new HarmonyMethod(typeof(FarmerPatch), nameof(FarmerPatch.getBaseExperienceForLevelTranspiler))
             );
         }
 

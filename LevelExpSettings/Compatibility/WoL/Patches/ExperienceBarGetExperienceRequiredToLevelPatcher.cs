@@ -16,20 +16,22 @@ namespace LevelExpSettings.Compatibility.WoL.Patches
             {
                 CodeMatcher matcher = new(instructions, generator);
 
-                MethodInfo newExperienceLevelsInfo = AccessTools.Method(typeof(FarmerPatch), nameof(FarmerPatch.newExperienceLevels));
+                MethodInfo newExpCalculated = AccessTools.PropertyGetter(typeof(ModEntry), nameof(ModEntry.LevelsCalculated));
 
                 //from: __result = ISkill.LEVEL_10_EXP + Config.Masteries.ExpPerPrestigeLevel * (currentLevel - 10 + 1)
-                //to:   __result = newExperienceLevels(currentLevel)
+                //to:   __result = ModEntry.LevelsCalculated[currentLevel]
                 matcher
                     .MatchStartForward(
                         new CodeMatch(OpCodes.Ldc_I4)
                     )
                     .ThrowIfNotMatch("FarmerCheckForLevelGainPatcherPatch.FarmerCheckForLevelGainPostfixTranspiler: IL code 1 not found")
-                    .RemoveInstruction()
-                    .Advance(1)
+                    .SetInstruction(
+                        new CodeInstruction(OpCodes.Call, newExpCalculated)
+                    )
+                    .Advance(2)
                     .RemoveInstructions(9)
                     .Insert(
-                        new CodeInstruction(OpCodes.Call, newExperienceLevelsInfo)
+                        new CodeInstruction(OpCodes.Ldelem_I4)
                     )
                 ;
 
