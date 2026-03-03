@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using LevelExpSettings.Compatibility.LookupAnything;
 using LevelExpSettings.Compatibility.SpaceCore;
 using LevelExpSettings.Compatibility.UES;
@@ -81,7 +81,11 @@ namespace LevelExpSettings
 
         internal static void CalculateLevels()
         {
-            for (int i = 0; i < 20; i++)
+            Array.Fill(LevelsCalculated, -1);
+
+            int limit = EnableLevel11To20 ? 20 : 10;
+
+            for (int i = 0; i < limit; i++)
             {
                 Levels[i] = Config.Levels[i + 1];
                 if (i > 0)

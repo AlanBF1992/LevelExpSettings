@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using StardewModdingAPI;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -15,12 +15,14 @@ namespace LevelExpSettings.Patches
             {
                 CodeMatcher matcher = new(instructions, generator);
 
-                MethodInfo newExpCalculated = AccessTools.PropertyGetter(typeof(ModEntry), nameof(ModEntry.LevelsCalculated));
+                MethodInfo newExpCalculatedInfo = AccessTools.Method(typeof(FarmerPatch), nameof(newExpCalculated));
 
                 matcher
-                    .Start()
+                    .MatchStartForward(
+                        new CodeMatch(OpCodes.Switch)
+                    )
                     .Insert(
-                        new CodeInstruction(OpCodes.Call, newExpCalculated)
+                        new CodeInstruction(OpCodes.Call, newExpCalculatedInfo)
                     )
                 ;
 
@@ -30,10 +32,9 @@ namespace LevelExpSettings.Patches
                     )
                     .ThrowIfNotMatch("FarmerPatch.getBaseExperienceForLevelTranspiler: IL code 1 not found")
                     .RemoveInstructions(23)
-                    .Insert(
-                        new CodeInstruction(OpCodes.Ldelem_I4)
-                    )
                 ;
+
+                matcher.Instructions().ForEach(Console.WriteLine);
 
                 return matcher.InstructionEnumeration();
             }
@@ -42,6 +43,15 @@ namespace LevelExpSettings.Patches
                 LogMonitor.Log($"Failed in {nameof(getBaseExperienceForLevelTranspiler)}:\n{ex}", LogLevel.Error);
                 return instructions;
             }
+        }
+
+        private static int newExpCalculated(int i)
+        {
+            return i switch
+            {
+                >= 0 and <= 19 => ModEntry.LevelsCalculated[i],
+                _ => -1,
+            };
         }
     }
 }

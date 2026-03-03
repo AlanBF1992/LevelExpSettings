@@ -1,7 +1,7 @@
 {
   "Name": "Level Experience Settings",
   "Author": "AlanBF",
-  "Version": "1.0.2",
+  "Version": "1.0.3",
   "Description": "Add settings to control the experience required to Level Up",
   "UniqueID": "AlanBF.LevelExpSettings",
   "EntryDll": "LevelExpSettings.dll",
