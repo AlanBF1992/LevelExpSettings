@@ -34,8 +34,6 @@ namespace LevelExpSettings.Patches
                     .RemoveInstructions(23)
                 ;
 
-                matcher.Instructions().ForEach(Console.WriteLine);
-
                 return matcher.InstructionEnumeration();
             }
             catch (Exception ex)
